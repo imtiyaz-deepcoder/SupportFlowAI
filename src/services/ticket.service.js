@@ -40,4 +40,15 @@ function getTicketById(id) {
     return tickets.find(t => t.id === id);
 }
 
-module.exports = { createTicketFromMessage, getAllTickets, getTicketById };
+function updateTicket(id, changes) {
+    const tickets = readTickets();
+    const index = tickets.findIndex(t => t.id === id);
+    if (index === -1) {
+        return null;
+    }
+    const updatedTicket = { ...tickets[index], ...changes };
+    tickets[index] = updatedTicket;
+    writeTickets(tickets);
+    return updatedTicket;
+}
+module.exports = { createTicketFromMessage, getAllTickets, getTicketById, updateTicket };
