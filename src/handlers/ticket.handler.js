@@ -1,4 +1,5 @@
 const ticketService = require('../services/ticket.service');
+const llmService = require('../services/llm.service');
 
 function createTicketHandler(req, res) {
     const ticket = ticketService.createTicketFromMessage(req.validatedData);
@@ -20,6 +21,28 @@ function getTicketByIdHandler(req, res) {
     res.status(200).json(ticket);
 }
 
+async function classifyTicketHandler(req, res) {
+    const { message } = req.body;
+
+    if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'A "message" string is required' });
+    }
+
+    const result = await llmService.classifyTicketWithRetry(message);
+
+    if (!result.success) {
+        return res.status(422).json({
+            error: 'LLM output failed validation',
+            retriesUsed: result.retriesUsed,
+            details: result.errors,
+        });
+    }
+
+    const ticket = ticketService.createTicketFromMessage(result.data);
+    res.status(201).json(ticket);
+
+}
+
 module.exports = {
-    createTicketHandler, getAllTicketsHandler, getTicketByIdHandler
+    createTicketHandler, getAllTicketsHandler, getTicketByIdHandler, classifyTicketHandler
 };

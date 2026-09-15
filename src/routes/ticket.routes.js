@@ -7,10 +7,12 @@ const {
     createTicketHandler,
     getAllTicketsHandler,
     getTicketByIdHandler,
+    classifyTicketHandler,
 } = require('../handlers/ticket.handler');
 
 router.post('/', validate(TicketRequestSchema), createTicketHandler);
 router.get('/', getAllTicketsHandler);
 router.get('/:id', getTicketByIdHandler);
+router.post('/classify', classifyTicketHandler);
 
 module.exports = router;
