@@ -5,6 +5,7 @@ const llmService = require('../services/llm.service');
 const ticketService = require('../services/ticket.service');
 const { default: z } = require('zod');
 const categoryHandler = require('../handlers/category.handler');
+const { resolveTicket } = require('../services/agent.service');
 
 const server = new McpServer({
     name: 'supportflow-ai',
@@ -111,6 +112,50 @@ server.registerTool(
             content: [{
                 type: 'text',
                 text: `Ticket ${updatedTicket.id} successfully escalated to human attention.\nPriority: ${updatedTicket.priority}\nAssigned to: ${updatedTicket.assignedTeam}`
+            }]
+        };
+    }
+);
+
+// resolve_ticket tool
+server.registerTool(
+    'resolve_ticket',
+    {
+        title: 'Resolve Ticket',
+        description: 'Runs the agentic resolution loop on an existing, non-critical ticket — attempts to fix the issue or provide information, escalating to a human only if it cannot safely proceed',
+        inputSchema: {
+            ticketId: z.string().describe('The unique ID of the existing ticket to resolve')
+        }
+    },
+    async ({ ticketId }) => {
+        const ticket = ticketService.getTicketById(ticketId);
+
+        if (!ticket) {
+            return {
+                content: [{
+                    type: 'text',
+                    text: `No ticket found with ID: ${ticketId}`
+                }],
+                isError: true
+            };
+        }
+
+        if (ticket.priority === 'CRITICAL') {
+            return {
+                content: [{
+                    type: 'text',
+                    text: `Ticket ${ticketId} is CRITICAL priority and was already escalated to a human at creation. No further action needed.`
+                }],
+                isError: true
+            };
+        }
+
+        const reflected = await resolveTicket(ticket);
+
+        return {
+            content: [{
+                type: 'text',
+                text: `Outcome: ${reflected.outcome}\n\n${reflected.responseMessage}`
             }]
         };
     }

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "KB001",
+    "category": "TECHNICAL",
+    "keywords": ["internet", "connection", "network", "down", "slow"],
+    "actionType": "PROVIDE_INFO",
+    "solution": "Restart your router by unplugging it for 30 seconds. If the issue persists, check if there is a known outage in your area."
+  },
+  {
+    "id": "KB002",
+    "category": "ACCOUNT",
+    "keywords": ["login", "password", "access", "locked", "reset"],
+    "actionType": "PROVIDE_INFO",
+    "solution": "Your account can be unlocked by resetting your password using the forgot password link on the login page."
+  },
+  {
+    "id": "KB003",
+    "category": "BILLING",
+    "keywords": ["charge", "invoice", "payment", "billing", "refund"],
+    "actionType": "FIX_ISSUE",
+    "solution": "Verified refund has been processed to the original payment method."
+  },
+  {
+    "id": "KB004",
+    "category": "TECHNICAL",
+    "keywords": ["slow", "performance", "lagging", "freeze", "crash"],
+    "actionType": "PROVIDE_INFO",
+    "solution": "Clear your browser cache and cookies. If using our desktop app, try reinstalling the latest version."
+  }
+]

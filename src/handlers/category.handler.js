@@ -38,6 +38,7 @@ const handleCriticalEscalation = (ticket) => {
     console.log(`[CRITICAL ESCALATION] Ticket ${ticket.id} flagged for immediate human attention!`);
     return {
         ...ticket,
+        status: 'ESCALATED',
         assignedTeam: 'HUMAN_ESCALATION',
         requiresImmediateAttention: true,
         routedAt: new Date().toISOString()
