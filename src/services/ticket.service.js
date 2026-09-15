@@ -1,17 +1,20 @@
 const fs = require('fs');
 const path = require('path');
+const { routeTicket } = require('../services/intent-router.service');
 
 const DATA_FILE = path.join(__dirname, '../../data/tickets.json');
 
 function createTicketFromMessage(data) {
     const tickets = readTickets();
 
-    const ticket = {
+    let ticket = {
         id: crypto.randomUUID(), // Generating UUID
         ...data,
         status: 'OPEN',
         createdAt: new Date().toISOString(),
     };
+
+    ticket = routeTicket(ticket);
 
     tickets.push(ticket);
     writeTickets(tickets);

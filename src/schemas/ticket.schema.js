@@ -8,6 +8,8 @@ const TicketRequestSchema = z.object({
         .min(20, 'Description must be at least 20 characters')
         .max(2000, 'Description must be under 2000 characters'),
     customerEmail: z.email('Enter a valid email address'),
+    category: z.enum(['BILLING', 'TECHNICAL', 'ACCOUNT', 'GENERAL'], 'Category must be one of the supported types'),
+    priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'], 'Priority must be one of the supported levels'),
 });
 const TicketRequestSchemaLenient = TicketRequestSchema.extend({
     customerEmail: z.email('Enter a valid email address').nullable(),
